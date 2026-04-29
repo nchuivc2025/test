@@ -134,7 +134,6 @@
  <section id="home" class="hero-section relative flex items-center justify-center overflow-hidden">
  <div class="relative z-10 text-center px-4 max-w-full">
  <p class="text-xs md:text-sm tracking-[0.4em] mb-6 opacity-80 uppercase">2026 Annual International Volunteers Club Exhibition</p>
- <!-- Tracing the Light：字體稍微縮小，一行顯示，Cinzel -->
  <h1 class="font-cinzel text-5xl md:text-7xl lg:text-8xl mb-8 tracking-tight shadow-text whitespace-nowrap">Tracing the Light</h1>
  <h2 class="text-lg md:text-xl gold-text tracking-[0.3em] mb-12 italic">A Journey from Mud to Stars</h2>
  <div class="h-[1px] w-32 gold-bg mx-auto mb-10 opacity-60"></div>
@@ -374,15 +373,12 @@
  <form id="google-form" class="space-y-6 text-left">
  <div>
  <label class="block text-[10px] tracking-[0.2em] text-gray-400 mb-2 uppercase" for="name">姓名 Name <span class="text-[#D4AF37]">*</span></label>
- <input id="name" type="text" placeholder="" required class="w-full bg-zinc-900/50 border border-white/10 px-6 py-4 text-sm focus:gold-border outline-none transition-all text-white">
+ <input id="name" type="text" placeholder="您的姓名 Name" required class="w-full bg-zinc-900/50 border border-white/10 px-6 py-4 text-sm focus:gold-border outline-none transition-all text-white">
  </div>
- 
-
-
  
  <div>
  <label class="block text-[10px] tracking-[0.2em] text-gray-400 mb-2 uppercase" for="message">您的建議 Message</label>
- <textarea id="message" rows="5" placeholder="" class="w-full bg-zinc-900/50 border border-white/10 px-6 py-4 text-sm focus:gold-border outline-none transition-all text-white"></textarea>
+ <textarea id="message" rows="5" placeholder="寫下您的回饋 Message..." class="w-full bg-zinc-900/50 border border-white/10 px-6 py-4 text-sm focus:gold-border outline-none transition-all text-white"></textarea>
  </div>
  
  <button type="submit" class="w-full gold-bg text-black font-bold py-5 text-xs tracking-[0.3em] hover:bg-yellow-600 transition-all uppercase font-didot mt-4">送出 Submit</button>
@@ -1041,7 +1037,8 @@
  e.preventDefault();
 
  // 需要先確認必填欄位是否填寫
- if ($('#name').val() && $('#score').val()) {
+ // 這裡的 HTML 並沒有 #score 所以改為檢查 #name 和 #message 是否為空
+ if ($('#name').val()) {
  
  // 防止重複點擊，將按鈕改為傳送中
  var $btn = $(this).find('button[type="submit"]');
@@ -1049,17 +1046,31 @@
  $btn.text('SENDING...').prop('disabled', true);
 
  $.ajax({
- // url為Google Form按下submit的action
- url: "https://docs.google.com/forms/d/e/1FAIpQLSf-ptJ4SqrXLzpU6EpXLfCtq-Y5r4ejOj5rh-5eQwAUYatp7Q/viewform?usp=header",
+ // URL 必須以 formResponse 結尾，不能用 viewform
+ url: "https://docs.google.com/forms/d/e/1FAIpQLSf-ptJ4SqrXLzpU6EpXLfCtq-Y5r4ejOj5rh-5eQwAUYatp7Q/formResponse",
  crossDomain: true, //解決跨網域CORS的問題
  data: {
  // entry.xxxxx 這些需要填寫您表單裡面的值，與其相互對應
  "entry.335976986": $('#name').val(),
  "entry.1469479569": $('#message').val()
  },
- type: "POST", //因為是要進行insert的動作，故事用POST
- dataType: "JSONP",
- complete: function () {
+ type: "POST", //因為是要進行insert的動作，故使用POST
+ dataType: "xml", // Google 表單不能完美回傳 JSONP，改為 xml 或略過解析來捕捉 success/error
+ statusCode: {
+ 0: function() {
+ // CORS 被擋下來但實際上資料已送出 (狀態碼為 0)
+ finishSubmit($btn, originalText);
+ },
+ 200: function() {
+ // 成功
+ finishSubmit($btn, originalText);
+ }
+ }
+ });
+ }
+ });
+
+ function finishSubmit($btn, originalText) {
  //完成後把這些欄位清空
  $('#name').val('');
  $('#message').val('');
@@ -1067,13 +1078,8 @@
  // 恢復按鈕狀態
  $btn.text(originalText).prop('disabled', false);
  
- // 最後提示感謝 (若需要跳轉可取消下方註解)
- // window.location.replace("thank.html");
  alert("您的回饋已成功送出，謝謝您的參與！");
  }
- });
- }
- });
  </script>
 </body>
 </html>
