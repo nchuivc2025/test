@@ -369,11 +369,23 @@
  <!-- 線上回饋表單 -->
  <div id="feedback" class="max-w-2xl mx-auto bg-black/40 p-12 border border-white/5 rounded-sm shadow-2xl">
  <h2 class="font-didot text-3xl mb-8 tracking-widest italic">Feedback</h2>
- <p class="text-sm text-gray-500 mb-12">寫下一封跨越國界的信。即便無法親臨現場，您的祝福仍能透過這座橋樑傳遞。</p>
- <form id="google-form" class="space-y-6">
- <input type="text" id="name" name="name" placeholder="您的姓名 Name" required class="w-full bg-zinc-900/50 border border-white/10 px-6 py-4 text-sm focus:gold-border outline-none transition-all">
- <textarea id="message" name="message" placeholder="寫下您的回饋 Message..." required rows="6" class="w-full bg-zinc-900/50 border border-white/10 px-6 py-4 text-sm focus:gold-border outline-none transition-all"></textarea>
- <button type="submit" class="w-full gold-bg text-black font-bold py-5 text-xs tracking-[0.3em] hover:bg-yellow-600 transition-all uppercase font-didot">Send Message</button>
+ <p class="text-sm text-gray-500 mb-10">寫下一封跨越國界的信。即便無法親臨現場，您的祝福仍能透過這座橋樑傳遞。</p>
+ 
+ <form id="google-form" class="space-y-6 text-left">
+ <div>
+ <label class="block text-[10px] tracking-[0.2em] text-gray-400 mb-2 uppercase" for="name">姓名 Name <span class="text-[#D4AF37]">*</span></label>
+ <input id="name" type="text" placeholder="" required class="w-full bg-zinc-900/50 border border-white/10 px-6 py-4 text-sm focus:gold-border outline-none transition-all text-white">
+ </div>
+ 
+
+
+ 
+ <div>
+ <label class="block text-[10px] tracking-[0.2em] text-gray-400 mb-2 uppercase" for="message">您的建議 Message</label>
+ <textarea id="message" rows="5" placeholder="" class="w-full bg-zinc-900/50 border border-white/10 px-6 py-4 text-sm focus:gold-border outline-none transition-all text-white"></textarea>
+ </div>
+ 
+ <button type="submit" class="w-full gold-bg text-black font-bold py-5 text-xs tracking-[0.3em] hover:bg-yellow-600 transition-all uppercase font-didot mt-4">送出 Submit</button>
  </form>
  </div>
  </div>
@@ -1029,7 +1041,7 @@
  e.preventDefault();
 
  // 需要先確認必填欄位是否填寫
- if ($('#name').val() && $('#message').val()) {
+ if ($('#name').val() && $('#score').val()) {
  
  // 防止重複點擊，將按鈕改為傳送中
  var $btn = $(this).find('button[type="submit"]');
@@ -1042,8 +1054,8 @@
  crossDomain: true, //解決跨網域CORS的問題
  data: {
  // entry.xxxxx 這些需要填寫您表單裡面的值，與其相互對應
- "entry.335976986": $('#name').val(),    // 請替換為您「姓名」的 entry ID
- "entry.1469479569": $('#message').val()  // 請替換為您「回饋」的 entry ID
+ "entry.335976986": $('#name').val(),
+ "entry.1469479569": $('#message').val()
  },
  type: "POST", //因為是要進行insert的動作，故事用POST
  dataType: "JSONP",
@@ -1055,7 +1067,9 @@
  // 恢復按鈕狀態
  $btn.text(originalText).prop('disabled', false);
  
-
+ // 最後提示感謝 (若需要跳轉可取消下方註解)
+ // window.location.replace("thank.html");
+ alert("您的回饋已成功送出，謝謝您的參與！");
  }
  });
  }
