@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Tracing the Light | 興大國際志工年度成果展</title>
+ <script src="https://cdn.tailwindcss.com"></script>
+ <!-- 引入 jQuery 以支援 AJAX 表單送出 -->
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ <!-- 引入 Cinzel, GFS Didot 與 Noto Serif TC -->
+ <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400&family=GFS+Didot&family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
+ <style>
+ :root {
+ --color-gold: #D4AF37;
+ --color-dark: #0A0A0A;
+ --color-ivc-green: #326755;
+ }
+ html {
+ scroll-behavior: smooth;
+ }
+ body {
+ background-color: var(--color-dark);
+ color: #E5E5E5;
+ font-family: 'Noto Serif TC', serif;
+ }
+ 
+ /* 僅主標題使用的字體：Cinzel, 不粗體, 一行顯示 */
+ .font-cinzel {
+ font-family: 'Cinzel', serif;
+ font-weight: 400;
+ }
+ 
+ /* 其他英文標題使用的字體：GFS Didot */
+ .font-didot {
+ font-family: 'GFS Didot', serif;
+ }
+
+ .gold-text { color: var(--color-gold); }
+ .gold-border { border-color: var(--color-gold); }
+ .gold-bg { background-color: var(--color-gold); }
+ 
+ /* 導覽列 Logo 顏色 */
+ .logo-bg { background-color: var(--color-ivc-green); }
+
+ .hero-section {
+ /* ★首頁主大圖★ */
+ background-image: linear-gradient(to bottom, rgba(10,10,10,0.3) 0%, rgba(10,10,10,0.9) 100%), 
+ url('https://lh3.googleusercontent.com/d/1f6kVP_ypNOeiVg4T4lNEYW6VCl2oVXmB'); 
+ background-size: cover;
+ background-position: center;
+ height: 100vh;
+ }
+
+ .nav-link::after {
+ content: '';
+ display: block;
+ width: 0;
+ height: 1px;
+ background: var(--color-gold);
+ transition: width .3s;
+ }
+ .nav-link:hover::after { width: 100%; }
+
+ /* 燈箱 Modal */
+ .modal {
+ display: none;
+ position: fixed;
+ z-index: 100;
+ left: 0;
+ top: 0;
+ width: 100%;
+ height: 100%;
+ background-color: rgba(0,0,0,0.95);
+ overflow-y: auto;
+ }
+ .modal.active {
+ display: block;
+ }
+
+ /* 文字陰影增強可讀性 */
+ .shadow-text {
+ text-shadow: 0 4px 12px rgba(0,0,0,0.5);
+ }
+
+ .card-hover:hover {
+ transform: translateY(-5px);
+ transition: all 0.3s ease;
+ }
+ </style>
+</head>
+<body>
+
+ <!-- 導覽列 -->
+ <nav class="fixed w-full z-50 bg-black/90 backdrop-blur-md border-b border-white/10 px-6 py-4">
+ <div class="max-w-7xl mx-auto flex justify-between items-center">
+ <div class="flex items-center space-x-4">
+ <div class="w-10 h-10 logo-bg rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg">IVC</div>
+ <span class="text-sm tracking-widest uppercase font-cinzel">Tracing the Light</span>
+ </div>
+ 
+ <!-- 桌面版選單 -->
+ <div class="hidden lg:flex space-x-6 text-[10px] tracking-widest items-center">
+ <a href="#home" class="nav-link">首頁 HOME</a>
+ <a href="#about" class="nav-link">關於展覽 ABOUT</a>
+ <a href="#nepal" class="nav-link">尼泊爾 NEPAL</a>
+ <a href="#domestic" class="nav-link">國內服務 DOMESTIC</a>
+ <a href="#team" class="nav-link">團隊 TEAM</a>
+ <a href="#feedback" class="nav-link">回饋 CONTACT</a>
+ <div class="h-4 w-[1px] bg-white/20 mx-2"></div>
+ <a href="https://oia.nchu.edu.tw/index.php/zh/" target="_blank" class="hover:text-gold-400 transition-colors opacity-70 hover:opacity-100 flex items-center">
+ <span class="mr-1">OIA 國際事務處</span>
+ <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+ </a>
+ </div>
+ 
+ <div class="lg:hidden">
+ <button id="menu-btn" class="text-white text-2xl">☰</button>
+ </div>
+ </div>
+ </nav>
+
+ <!-- 手機版選單 -->
+ <div id="mobile-menu" class="fixed inset-0 bg-black z-[60] flex flex-col items-center justify-center space-y-8 text-lg tracking-widest md:hidden transition-transform duration-300 translate-x-full">
+ <button id="close-btn" class="absolute top-6 right-6 text-3xl">&times;</button>
+ <a href="#home" class="mobile-nav-link">首頁 HOME</a>
+ <a href="#about" class="mobile-nav-link">關於展覽 ABOUT</a>
+ <a href="#nepal" class="mobile-nav-link">尼泊爾 NEPAL</a>
+ <a href="#domestic" class="mobile-nav-link">國內服務 DOMESTIC</a>
+ <a href="#team" class="mobile-nav-link">團隊 TEAM</a>
+ <a href="https://oia.nchu.edu.tw/index.php/zh/" target="_blank" class="mobile-nav-link gold-text">OIA 國際事務處</a>
+ </div>
+
+ <!-- 主視覺區 (Hero) -->
+ <section id="home" class="hero-section relative flex items-center justify-center overflow-hidden">
+ <div class="relative z-10 text-center px-4 max-w-full">
+ <p class="text-xs md:text-sm tracking-[0.4em] mb-6 opacity-80 uppercase">2026 Annual International Volunteers Club Exhibition</p>
+ <!-- Tracing the Light：字體稍微縮小，一行顯示，Cinzel -->
+ <h1 class="font-cinzel text-5xl md:text-7xl lg:text-8xl mb-8 tracking-tight shadow-text whitespace-nowrap">Tracing the Light</h1>
+ <h2 class="text-lg md:text-xl gold-text tracking-[0.3em] mb-12 italic">A Journey from Mud to Stars</h2>
+ <div class="h-[1px] w-32 gold-bg mx-auto mb-10 opacity-60"></div>
+ <p class="text-sm tracking-[0.2em] mb-12 leading-loose">05/11 MON. - 05/15 FRI. <br> 國立中興大學 雲平樓 1F</p>
+ <a href="#about" class="border gold-border px-10 py-4 text-xs tracking-widest hover:bg-white/10 transition-all uppercase">開啟線上展覽之旅 Explore</a>
+ </div>
+ </section>
+
+ <!-- 關於展覽 -->
+ <section id="about" class="py-32 px-6 bg-black">
+ <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-20 items-center">
+ <div>
+ <h3 class="text-4xl mb-10 gold-text tracking-wide font-didot italic">About Exhibition</h3>
+ <h4 class="text-2xl mb-6">『尼』土與星空：跨越邊界的橋樑</h4>
+ <div class="space-y-8 text-gray-400 leading-relaxed text-base">
+ <p>我們的足跡不曾停歇。從長愛育幼院的陪伴中，我們學習用耐心灌溉希望；在苗栗純樸的農田中，我們捲起袖子感受大地的脈動；在狗園的日常照護裡，我們實踐了對生命的尊重。這一切的「泥土味」，都是我們出發前的初心。</p>
+ <p>帶著臺灣的暖陽，我們抵達了尼泊爾拉傑比拉傑。在這純樸的小鎮中，我們看見了孩子們眼中璀璨的求知欲。透過教育宣導、文化交流與深度對話，我們與當地的夥伴建立起跨越地理與語言的橋樑。</p>
+ <p>這場旅程的結束不是終點，而是改變的開始。微小的我們無法獨自點亮黑夜，但當所有的漣漪交會，便是繁星匯聚的時刻。</p>
+ </div>
+ </div>
+ <div class="relative group">
+ <div class="absolute -top-6 -left-6 w-32 h-32 border-t-2 border-l-2 gold-border opacity-40"></div>
+ <img src="https://lh3.googleusercontent.com/d/1jOD2Rvzgnn6OmjxjUFWmWER5OQcSbsHW" alt="Nepal Children" class="w-full h-auto object-contain shadow-2xl">
+ <div class="absolute -bottom-6 -right-6 w-32 h-32 border-b-2 border-r-2 gold-border opacity-40"></div>
+ </div>
+ </div>
+ </section>
+
+ <!-- 尼泊爾專區 -->
+ <section id="nepal" class="py-24 px-6 bg-zinc-900/50">
+ <div class="max-w-7xl mx-auto">
+ <div class="text-center mb-20">
+ <h2 class="font-didot text-5xl mb-4 italic">Nepal Showcase</h2>
+ <div class="h-1 w-12 gold-bg mx-auto mb-4"></div>
+ <p class="text-[10px] tracking-[0.4em] gold-text uppercase">尼泊爾成果專區：點擊方塊探索更多照片</p>
+ </div>
+ <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+ <div onclick="openModal('nepal-1')" class="bg-black/40 p-8 card-hover border border-white/5 cursor-pointer group">
+ <div class="aspect-video bg-zinc-800 mb-8 overflow-hidden relative">
+ <img src="https://lh3.googleusercontent.com/d/1IolF27jpW5LPwh6ZKTwWzxjbvQDu6zBF" alt="Nepal School" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+ </div>
+ <h4 class="text-xl mb-4 gold-text">拉傑比拉傑：校園與微笑</h4>
+ <p class="text-sm text-gray-500 leading-relaxed">在這純樸的小鎮中，我們搭起一座與當地孩子們的橋樑。</p>
+ <div class="mt-6 text-[10px] gold-text tracking-widest font-bold font-didot">DISCOVER MORE +</div>
+ </div>
+ <div onclick="openModal('nepal-2')" class="bg-black/40 p-8 card-hover border border-white/5 cursor-pointer group">
+ <div class="aspect-video bg-zinc-800 mb-8 overflow-hidden relative">
+ <img src="https://lh3.googleusercontent.com/d/1DtmnnCzNkeL8BHjKV3pFmSDVfUSccs4N" alt="Culture" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+ </div>
+ <h4 class="text-xl mb-4 gold-text">我們都是一家人：甜蜜蜜的熱茶</h4>
+ <p class="text-sm text-gray-500 leading-relaxed">家，是一個概念，並非一個地點。有歸屬的地方，那就是家。</p>
+ <div class="mt-6 text-[10px] gold-text tracking-widest font-bold font-didot">DISCOVER MORE +</div>
+ </div>
+ <div onclick="openModal('nepal-3')" class="bg-black/40 p-8 card-hover border border-white/5 cursor-pointer group">
+ <div class="aspect-video bg-zinc-800 mb-8 overflow-hidden relative">
+ <img src="https://lh3.googleusercontent.com/d/1hWc8Npv9aEaJb6NYTrPjoKQUtvpIHhT5" alt="Stars" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+ </div>
+ <h4 class="text-xl mb-4 gold-text">文化連結：尼泊爾的土地</h4>
+ <p class="text-sm text-gray-500 leading-relaxed">透過鏡頭，我們記錄下這片美麗的土地。</p>
+ <div class="mt-6 text-[10px] gold-text tracking-widest font-bold font-didot">DISCOVER MORE +</div>
+ </div>
+ </div>
+ </div>
+ </section>
+
+ <!-- 國內服務專區 (Domestic Service) -->
+ <section id="domestic" class="py-24 px-6 bg-black">
+ <div class="max-w-7xl mx-auto">
+ <div class="text-center mb-20">
+ <h2 class="font-didot text-5xl mb-4 italic">Domestic Service</h2>
+ <div class="h-1 w-12 gold-bg mx-auto mb-4"></div>
+ <p class="text-[10px] tracking-[0.4em] gold-text uppercase">在地深耕：國內紮根與成長</p>
+ </div>
+ 
+ <!-- 國內服務三欄網格 -->
+ <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+ <!-- 雲林育育院 -->
+ <div onclick="openModal('dom-1')" class="group cursor-pointer">
+ <div class="relative overflow-hidden mb-6 aspect-square">
+ <img src="https://lh3.googleusercontent.com/d/1nZfYH7UefGZNqIeT1qGHd-li2rDShbtS" alt="Charity" class="w-full h-full object-cover transition-all duration-700 group-hover:scale-105">
+ <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-all"></div>
+ </div>
+ <h4 class="text-xl gold-text mb-3 tracking-wide">雲林育幼院：溫慢陪伴</h4>
+ <p class="text-xs text-gray-500 leading-relaxed opacity-80 group-hover:opacity-100 transition-opacity">透過一日的陪伴，我們希望成為孩子們成長路上的微光。</p>
+ <div class="mt-4 text-[10px] tracking-[0.2em] border-b border-gold-border/30 inline-block pb-1 group-hover:gold-border transition-all">LEARN MORE</div>
+ </div>
+
+ <!-- 狗園守護 -->
+ <div onclick="openModal('dom-2')" class="group cursor-pointer">
+ <div class="relative overflow-hidden mb-6 aspect-square">
+ <img src="https://lh3.googleusercontent.com/d/1EKOzo1-IUTDN8vHuq5wfFwdV4oRiqdb5" alt="Dog Shelter" class="w-full h-full object-cover transition-all duration-700 group-hover:scale-105">
+ <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-all"></div>
+ </div>
+ <h4 class="text-xl gold-text mb-3 tracking-wide">狗園服務：生命的重量</h4>
+ <p class="text-xs text-gray-500 leading-relaxed opacity-80 group-hover:opacity-100 transition-opacity">學習與生命對話，實踐對每一個生命的尊重。</p>
+ <div class="mt-4 text-[10px] tracking-[0.2em] border-b border-gold-border/30 inline-block pb-1 group-hover:gold-border transition-all">LEARN MORE</div>
+ </div>
+
+ <!-- 苗栗農田 -->
+ <div onclick="openModal('dom-3')" class="group cursor-pointer">
+ <div class="relative overflow-hidden mb-6 aspect-square">
+ <img src="https://lh3.googleusercontent.com/d/1bYwFpMNjrG3y4KQSLLdEEzHM5BGz8eRg" alt="Farm" class="w-full h-full object-cover transition-all duration-700 group-hover:scale-105">
+ <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-all"></div>
+ </div>
+ <h4 class="text-xl gold-text mb-3 tracking-wide">苗栗農田：友善土地</h4>
+ <p class="text-xs text-gray-500 leading-relaxed opacity-80 group-hover:opacity-100 transition-opacity">走入農田，重新建立人與自然環境的橋樑。</p>
+ <div class="mt-4 text-[10px] tracking-[0.2em] border-b border-gold-border/30 inline-block pb-1 group-hover:gold-border transition-all">LEARN MORE</div>
+ </div>
+ </div>
+ </div>
+ </section>
+
+ <!-- 團隊成員 -->
+ <section id="team" class="py-32 px-6 bg-zinc-900/30">
+ <div class="max-w-7xl mx-auto">
+ <div class="text-center mb-24">
+ <h2 class="font-didot text-5xl mb-4 italic">Meet the Team</h2>
+ <p class="text-[10px] tracking-[0.4em] gold-text uppercase">團隊成員：指導老師與志工夥伴</p>
+ </div>
+ 
+ <!-- 指導老師區 -->
+ <div class="grid grid-cols-2 gap-10 text-center mb-24 max-w-md mx-auto">
+ <div class="group">
+ <div class="aspect-[4/5] bg-zinc-900 mb-6 border-2 gold-border/30 group-hover:gold-border transition-colors overflow-hidden relative">
+ <img src="https://lh3.googleusercontent.com/d/1QS_0mm3P5Uzy0M6zgykS_cIwo2C51kiL" alt="黃品慈" class="w-full h-full object-cover hidden" onload="this.classList.remove('hidden')">
+ <div class="w-full h-full flex items-center justify-center text-[10px] text-gray-700 italic">Portrait</div>
+ </div>
+ <p class="text-base font-bold mb-1">黃品慈</p>
+ <p class="text-[10px] gold-text opacity-70 tracking-widest uppercase font-didot">Advisory Teacher</p>
+ </div>
+ <div class="group">
+ <div class="aspect-[4/5] bg-zinc-900 mb-6 border-2 gold-border/30 group-hover:gold-border transition-colors overflow-hidden relative">
+ <img src="https://lh3.googleusercontent.com/d/10t2FpuiPCSlrE5vegu55KKMljzuaseOF" alt="鄭任鈞" class="w-full h-full object-cover hidden" onload="this.classList.remove('hidden')">
+ <div class="w-full h-full flex items-center justify-center text-[10px] text-gray-700 italic">Portrait</div>
+ </div>
+ <p class="text-base font-bold mb-1">鄭任鈞</p>
+ <p class="text-[10px] gold-text opacity-70 tracking-widest uppercase font-didot">Advisory Teacher</p>
+ </div>
+ </div>
+
+ <!-- 志工成員區 -->
+ <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8 text-center">
+ <script>
+ const volunteers = [
+ { name: "劉宜婷", id: "vol-1", story: "在這趟旅程中，我第一次真正理解「付出」的意義。每一次彎下腰，都讓我看見更廣闊的世界。" },
+ { name: "許競恬", id: "vol-2", story: "走進尼泊爾的校園，孩子們的笑容讓我明白，語言從來都不是距離，心才是。" },
+ { name: "李沛頎", id: "vol-3", story: "從農田到異鄉，這一年的服務讓我重新認識自己，也讓我學會了謙遜與感恩。" },
+ { name: "阮圖源", id: "vol-4", story: "我帶著好奇心出發，帶著滿滿的故事回來。每一片土地都教會我不同的事。" },
+ { name: "張凱鈞", id: "vol-5", story: "志願服務不是施捨，而是一種相互學習。這段旅程改變了我看世界的方式。" },
+ { name: "李彥樺", id: "vol-6", story: "在最遠的地方，我找到了最靠近自己內心的答案。這是一場關於成長的旅行。" },
+ { name: "李晴奕", id: "vol-7", story: "那些在狗園蹲下來的瞬間、在田裡流汗的午後，都成為了我生命中珍貴的刻度。" },
+ { name: "林家安", id: "vol-8", story: "服務的過程中，我不斷問自己「我能做什麼？」最終發現，陪伴本身就已足夠。" },
+ { name: "葉熙賢", id: "vol-9", story: "跨越邊界的不只是飛機，還有我對「他者」的理解與同理。這是我最珍貴的一課。" },
+ { name: "林筠臻", id: "vol-10", story: "從雲林到拉傑比拉傑，每一段路都讓我更確信：善意是人類共通的語言。" },
+ { name: "蔡昀珈", id: "vol-11", story: "我以為我是去幫助別人，卻發現是那些孩子的眼神治癒了我。謝謝這趟旅程。" },
+ { name: "江采融", id: "vol-12", story: "星空下的許諾不只是一個夢，它是驅動我繼續前行、繼續相信的力量來源。" },
+ ];
+ const portraitMap = {
+ "vol-1": "https://lh3.googleusercontent.com/d/1VekDfJpaEXla_fivIgbovz_d0Edv2gzV",
+ "vol-2": "https://lh3.googleusercontent.com/d/1xdReVXXsaXv2lLfT2JwD8nFGzTVOO6ZK",
+ "vol-3": "https://lh3.googleusercontent.com/d/1uWEYX1XJVNez82UMhNlXyQIe1NibgTct",
+ "vol-4": "https://lh3.googleusercontent.com/d/1qDXawjw_X6HkJY6uCZQHecSeDfWxrd52",
+ "vol-5": "https://lh3.googleusercontent.com/d/1tfsWNTZYNZyTX1CHhBvz_v_S22e5cXQ9",
+ "vol-6": "https://lh3.googleusercontent.com/d/1XDHE05mpc-WoLBONkPJWf62gTT3dkKRY",
+ "vol-7": "https://lh3.googleusercontent.com/d/1vOUCSq18XedRM6V7bXiyjoxIvKF8evlf",
+ "vol-8": "https://lh3.googleusercontent.com/d/1x3Cqa2EoNFDK9mdmsyzA3x2FYxtgc7LL",
+ "vol-9": "https://lh3.googleusercontent.com/d/1Ekl8CWQI3KDtwOKSY557TYdC8_k8RcSg",
+ "vol-10": "https://lh3.googleusercontent.com/d/1oj34SpZpy5maC4vN6QzUqMeTIQCoPrPw",
+ "vol-11": "https://lh3.googleusercontent.com/d/1FSaNJCoXmJAs1AVA9eSS3-Boq21VqFCv",
+ "vol-12": "https://lh3.googleusercontent.com/d/18FehVwsAjHV84VNmGFNwK512dPAdZ9vH",
+ };
+
+ volunteers.forEach((v) => {
+ const src = portraitMap[v.id] || '';
+ document.write(`
+ <div onclick="openModal('${v.id}')" class="group cursor-pointer">
+ <div class="aspect-[3/4] bg-zinc-900 mb-4 transition-all border border-white/5 group-hover:border-yellow-600 flex items-center justify-center overflow-hidden shadow-lg">
+ ${src ? `<img src="${src}" alt="${v.name}" class="w-full h-full object-cover">` : `<span class="text-[10px] text-gray-700 italic font-didot">PHOTO</span>`}
+ </div>
+ <p class="text-sm mb-1">${v.name}</p>
+ <p class="text-[10px] gold-text opacity-60 font-didot">Volunteer</p>
+ </div>
+ `);
+ });
+ </script>
+ </div>
+ </div>
+ </section>
+
+ <!-- 特別感謝與特別單位 -->
+ <section id="contact" class="py-32 px-6 bg-zinc-950 text-center">
+ <div class="max-w-5xl mx-auto">
+ <div class="mb-32">
+ <h3 class="text-[10px] tracking-[0.5em] gold-text uppercase mb-16 font-didot">Special Thanks</h3>
+ 
+ <!-- 領隊區 -->
+ <div class="grid grid-cols-1 md:grid-cols-3 gap-16 mb-20 max-w-3xl mx-auto">
+ <div class="group">
+ <div class="aspect-square bg-zinc-900 border border-white/10 mb-6 overflow-hidden transition-all group-hover:gold-border">
+ <img src="https://lh3.googleusercontent.com/d/1i6aIHkUNhnpNZk3TjbM6tsNCE08T0Xva" alt="Mohammad Rahaman" class="w-full h-full object-cover hidden" onload="this.classList.remove('hidden')">
+ <div class="w-full h-full flex items-center justify-center text-[10px] text-gray-700 italic font-didot">Portrait</div>
+ </div>
+ <p class="text-xl font-bold mb-2">Mohammad Rahaman</p>
+ <p class="text-[10px] opacity-40 uppercase tracking-[0.2em] font-didot">Project Coordinator</p>
+ </div>
+ <div class="group">
+ <div class="aspect-square bg-zinc-900 border border-white/10 mb-6 overflow-hidden transition-all group-hover:gold-border">
+ <img src="https://lh3.googleusercontent.com/d/1UvHrVFXI5Tq9jC_T7-beD5SrvxJyESPQ" alt="朱紹瑀" class="w-full h-full object-cover hidden" onload="this.classList.remove('hidden')">
+ <div class="w-full h-full flex items-center justify-center text-[10px] text-gray-700 italic">Portrait</div>
+ </div>
+ <p class="text-xl font-bold mb-2">朱紹瑀</p>
+ <p class="text-[10px] opacity-40 uppercase tracking-[0.2em] font-didot">Project Coordinator</p>
+ </div>
+ <div class="group">
+ <div class="aspect-square bg-zinc-900 border border-white/10 mb-6 overflow-hidden transition-all group-hover:gold-border">
+ <img src="https://lh3.googleusercontent.com/d/1ps_NBRmEyzIJLkTPmRcyI2ycmMvk1XI8" alt="梁湘翎" class="w-full h-full object-cover hidden" onload="this.classList.remove('hidden')">
+ <div class="w-full h-full flex items-center justify-center text-[10px] text-gray-700 italic">Portrait</div>
+ </div>
+ <p class="text-xl font-bold mb-2">梁湘翎</p>
+ <p class="text-[10px] opacity-40 uppercase tracking-[0.2em] font-didot">Project Coordinator</p>
+ </div>
+ </div>
+
+ <!-- 企業致謝：Canon -->
+ <div class="space-y-6">
+ <div class="h-[1px] w-16 gold-bg mx-auto opacity-20 mb-8"></div>
+ <p class="font-didot text-2xl tracking-[0.3em] italic gold-text">Canon 佳能台灣</p>
+ <p class="text-[10px] tracking-[0.2em] opacity-30">Grateful for providing vision and high-quality storytelling support.</p>
+ </div>
+ </div>
+
+ <!-- 線上回饋表單 -->
+ <div id="feedback" class="max-w-2xl mx-auto bg-black/40 p-12 border border-white/5 rounded-sm shadow-2xl">
+ <h2 class="font-didot text-3xl mb-8 tracking-widest italic">Feedback</h2>
+ <p class="text-sm text-gray-500 mb-12">寫下一封跨越國界的信。即便無法親臨現場，您的祝福仍能透過這座橋樑傳遞。</p>
+ <form id="google-form" class="space-y-6">
+ <input type="text" id="name" name="name" placeholder="您的姓名 Name" required class="w-full bg-zinc-900/50 border border-white/10 px-6 py-4 text-sm focus:gold-border outline-none transition-all">
+ <textarea id="message" name="message" placeholder="寫下您的回饋 Message..." required rows="6" class="w-full bg-zinc-900/50 border border-white/10 px-6 py-4 text-sm focus:gold-border outline-none transition-all"></textarea>
+ <button type="submit" class="w-full gold-bg text-black font-bold py-5 text-xs tracking-[0.3em] hover:bg-yellow-600 transition-all uppercase font-didot">Send Message</button>
+ </form>
+ </div>
+ </div>
+ </section>
+
+ <!-- 頁尾 -->
+ <footer class="py-20 border-t border-white/5 bg-black px-6 text-center">
+ <div class="max-w-4xl mx-auto">
+ <div class="mb-12">
+ <p class="text-[10px] tracking-[0.4em] opacity-30 uppercase mb-4 font-didot text-white">Under the Guidance of</p>
+ <a href="https://oia.nchu.edu.tw/index.php/zh/" target="_blank" class="text-xs gold-text tracking-widest hover:underline leading-relaxed">
+ 國立中興大學 國際事務處 <br> Office of International Affairs, NCHU
+ </a>
+ </div>
+
+ <div class="flex justify-center space-x-10 mb-12">
+ <a href="https://www.instagram.com/nchu_ivc?igsh=eXVsemRzOTNyMzc2" target="_blank" class="text-gray-500 hover:text-white transition-colors text-xs tracking-widest font-didot">INSTAGRAM</a>
+ <a href="https://www.facebook.com/share/1Dgu8EkMS1/?mibextid=wwXIfr" target="_blank" class="text-gray-500 hover:text-white transition-colors text-xs tracking-widest font-didot">FACEBOOK</a>
+ </div>
+ 
+ <p class="text-[10px] text-zinc-700 tracking-[0.3em] uppercase font-didot">
+ &copy; 2026 NCHU International Volunteers Club. All Rights Reserved.
+ </p>
+ </div>
+ </footer>
+
+ <!-- 彈窗 (Modals) 結構 -->
+
+ <!-- 志工燈箱 -->
+ <div id="vol-1" class="modal">
+ <div class="max-w-4xl mx-auto py-24 px-8 relative">
+ <button onclick="closeModal('vol-1')" class="fixed top-10 right-10 text-white text-5xl hover:text-yellow-500 z-10">&times;</button>
+ <p class="text-[10px] tracking-[0.4em] gold-text uppercase font-didot mb-2">Volunteer</p>
+ <h3 class="font-didot text-4xl text-white mb-3 italic">劉宜婷</h3>
+ <div class="h-px w-full bg-white/10 mb-6"></div>
+ <p class="text-gray-400 leading-relaxed mb-10 text-sm">在這趟旅程中，我第一次真正理解「付出」的意義。每一次彎下腰，都讓我看見更廣闊的世界。</p>
+ <div class="columns-2 md:columns-3 gap-4 space-y-4">
+ <img src="https://lh3.googleusercontent.com/d/1L7bapvpGMqQeTyNboFAndlUYpNYLkjxl" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1Bcy16qzjpvkOgsuWjYBe724iv1y1DKn6" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1wZWg2d53B3WxZRozdl-7LWkCOsWF9rmx" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1_jDwiqKA0bXI0YOpXZ15nirpsI___kKk" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1phlpQ0hUcliFFhpt-UEXsqnhtFy7Fs7h" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1-55IB9uRxn6mWVddQDQTOroNbvzOxwD8" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1G_gpvku-C1k8AhjthmvkAKabSV346CZZ" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1uZlVGpFplhBQY5NosPs5w3HPjU0CH1__" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1_XpChoGCIdwwuAWbtAEtX49F2l3adcxr" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1QPFGlf3ZUXqLqIuxBIYmeSOz91UjE9Lb" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1-4raV_hkGQM3bdr2Ks7tbeOuE-Ar69JD" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1eBf_FrNsAH166cMWMrPHtSp7cSweB0pj" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1dRMHGXizG3EBR0gOnwAyoR4CQd1HZzkb" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1oDXENSlbF06BgXBiXYlDO1j-PC1sD248" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1W4n1pRdNy2g3DUhvIaoda2LdV77cisc3" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ </div>
+ </div>
+ </div>
+ </div>
+
+ <div id="vol-2" class="modal">
+ <div class="max-w-4xl mx-auto py-24 px-8 relative">
+ <button onclick="closeModal('vol-2')" class="fixed top-10 right-10 text-white text-5xl hover:text-yellow-500 z-10">&times;</button>
+ <p class="text-[10px] tracking-[0.4em] gold-text uppercase font-didot mb-2">Volunteer</p>
+ <h3 class="font-didot text-4xl text-white mb-3 italic">許競恬</h3>
+ <div class="h-px w-full bg-white/10 mb-6"></div>
+ <p class="text-gray-400 leading-relaxed mb-10 text-sm">走進尼泊爾的校園，孩子們的笑容讓我明白，語言從來都不是距離，心才是。</p>
+ <div class="columns-2 md:columns-3 gap-4 space-y-4">
+ <img src="https://lh3.googleusercontent.com/d/1KeM03IKLuFXHzZIMjCH_-axCTN6vGB1_" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1TXOiJDvkFXJKCL8BYvF3N6U2PsO5sfYN" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1PKcbU5CmLvlCl1l92zweji4ELA5FhzaG" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1CnUvnsPFtlBuROh3kkVZIC8ufpEp0LE-" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1NZn_hYoduToiI8BhQB7AfXUt6aszkAUx" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1UCFGGitAdguwtaSGHMslmCdandmhXnde" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1MXOuYbCe5b5L41r3WDY0XJDvQ7Y4hLXF" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1d0shf1p-mL6rd-5cq_6qwzfrwTbC0xen" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/16SiPjRnPsUHOhWXXItrV2YLy94p9nuP-" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1RUbENg2CO72XObxhyDb3Pma57brYtgbj" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/18b9HWD2a1_5E31fDwKvfgO8wEVd2fscy" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/13j3tLVgECosZeHkIanuahlLygniZm8Pz" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1A9lFkI9nxb5Jmql93xrvrcf-fqZnHASZ" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1IQUUgsWedG6MeB4egbZuTXkmlp3SK8x_" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1r_OWByzCSxilLAQNsoOIqEf8y1KntYnP" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1jJvorDJeExN16DmKND7TbvlXhGqD4imT" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/13WoORaGMxOnqodZ7kasbgZiCra7IJhEn" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1I2UN1LgXkl0Yh2Uc3QrJUvJXo2yaJCmf" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/10FDlRNxwvBZ6_Xk7uACswWEqfb7IU78K" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1XrcC6RQti0M000GfBHWAcDYWbM2QZlfv" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1BZMNOsUU-sKPbS5ZyojKj_8eL-9PeIAc" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1GcDi_cRXWA3Z59dfQ50RAwC7qLz7sZ_j" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/15sOVTmzUQEOL5Q-ox-t5bSpVmIXo_WbO" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ </div>
+ </div>
+ </div>
+ </div>
+
+ <div id="vol-3" class="modal">
+ <div class="max-w-4xl mx-auto py-24 px-8 relative">
+ <button onclick="closeModal('vol-3')" class="fixed top-10 right-10 text-white text-5xl hover:text-yellow-500 z-10">&times;</button>
+ <p class="text-[10px] tracking-[0.4em] gold-text uppercase font-didot mb-2">Volunteer</p>
+ <h3 class="font-didot text-4xl text-white mb-3 italic">李沛頎</h3>
+ <div class="h-px w-full bg-white/10 mb-6"></div>
+ <p class="text-gray-400 leading-relaxed mb-10 text-sm">從農田到異鄉，這一年的服務讓我重新認識自己，也讓我學會了謙遜與感恩。</p>
+ <div class="flex flex-col items-center gap-8">
+ <img src="https://lh3.googleusercontent.com/d/1uWEYX1XJVNez82UMhNlXyQIe1NibgTct" alt="李沛頎" class="w-64 object-cover">
+ <a href="https://oia.nchu.edu.tw/images/File/05_Global_Mobility/5-5-International-Volunteers/2025/01____Nepal_Optimized.pdf" target="_blank" class="border gold-border px-10 py-4 text-xs tracking-widest hover:bg-white/10 transition-all uppercase font-didot gold-text">閱讀完整心得報告 ↗</a>
+ </div>
+ </div>
+ </div>
+
+ <div id="vol-4" class="modal">
+ <div class="max-w-4xl mx-auto py-24 px-8 relative">
+ <button onclick="closeModal('vol-4')" class="fixed top-10 right-10 text-white text-5xl hover:text-yellow-500 z-10">&times;</button>
+ <p class="text-[10px] tracking-[0.4em] gold-text uppercase font-didot mb-2">Volunteer</p>
+ <h3 class="font-didot text-4xl text-white mb-3 italic">阮圖源</h3>
+ <div class="h-px w-full bg-white/10 mb-6"></div>
+ <p class="text-gray-400 leading-relaxed mb-10 text-sm">我帶著好奇心出發，帶著滿滿的故事回來。每一片土地都教會我不同的事。</p>
+ <div class="columns-2 md:columns-3 gap-4 space-y-4">
+ <img src="https://lh3.googleusercontent.com/d/1FNR_my-kBwGxMLRzWPwabklS0PHlnHh3" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1lTwYvtBLg-bAnPFN2XDtqek4gR7aVsMD" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/13TQWchA9lPzMBN7udk_66jJIz11SZ8Ef" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/14ex0t5aHkNEid951fIASGPpxRJvDgwUn" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1fKar9gyHz6I3uA4c7uK5bUAt16OmjxBQ" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/19OOnhAQhWYEbcvjXu9v6NdJYYq8x_xKQ" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1p5McbmK0-h44r1RfwjudVwZiBnagWTV-" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1JwfRAIjnytMKA-PSC230Oa_dr6M1NlaS" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1sTgh4j16WZzd_ru-0C3JQIE8i2DWbDMF" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1fD5Z0vnIlQjoAvHFNbsdTsHOfxogtjLD" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1Ys0Ymzg88H7JoTpW09LlLJoZ1QhGJ_oi" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1Ay5gHj8jLbNHrlaUbh5bDg_EYQ-RfbP5" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1SQnrihtY-i6VVVk1Ct9GUBhGdHkUbdAl" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/165gKGgED5ac8K6Ef1Ep1nJL7Tgdtlz_q" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ </div>
+ </div>
+ </div>
+ </div>
+
+ <div id="vol-5" class="modal">
+ <div class="max-w-4xl mx-auto py-24 px-8 relative">
+ <button onclick="closeModal('vol-5')" class="fixed top-10 right-10 text-white text-5xl hover:text-yellow-500 z-10">&times;</button>
+ <p class="text-[10px] tracking-[0.4em] gold-text uppercase font-didot mb-2">Volunteer</p>
+ <h3 class="font-didot text-4xl text-white mb-3 italic">張凱鈞</h3>
+ <div class="h-px w-full bg-white/10 mb-6"></div>
+ <p class="text-gray-400 leading-relaxed mb-10 text-sm">志願服務不是施捨，而是一種相互學習。這段旅程改變了我看世界的方式。</p>
+ <div class="columns-2 md:columns-3 gap-4 space-y-4">
+ <img src="https://lh3.googleusercontent.com/d/18RahZqdZqdm8HIrZAGmIXFg7_ugDfZMm" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1DQ45AHHFPMoDa0ERYH1MZCkFsbmhLgNJ" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1rObKiLRC27l1L8WmM4LGcFtmx_XVsO83" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1FYqcW-EC_VYqUWJhG-3V2i-SqZ4IOhI4" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1TcYnHkmewDv0MWKHY58gxskb0V7wRHg7" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1Hwlb3yrcoE1x3gA6xFwb3nZJCgEjVsgG" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1xyMBsg0yxXuvkNFlOeJwH4buW8C4pv4S" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1YL6GTn0xvnsywKl1HGK18Dm445o6Ka3P" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1EnOkWq4udA1yXFjwbt1YMavxAmkHgTtM" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1Ll8YBYvQUNpBlmZcSw5G2rY5dXTu-hpM" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1gJFWFvGnXFs54bxj5MXFc-45tmz7gWjT" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1B05i4UTDySDf8QfrG0eyLt-vtDFssIRm" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1BoxBU7tGkIYP-XP9X7xvCfMkNrozS7g8" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1DMI4SNEa7Tv5pkXjDS6g1SpBLOAVc5Ys" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1tlA5dzZg5l5TjUVfD_im8Grht8Jd3wxG" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1MBjS25-D_eTluNausaNn7gFivCKUgKbc" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/19Kdio7p7J6F8PX89BTBQBWydyvYJ1Ops" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1IWa1q7g5V-a2E-ZSPys0KPxqjgYbKInP" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/15k2s5HYCJAGBHBlV7kBYyqar9AcH8lXT" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1IAQrh3V4o1DEgXuapojjd4sPjniR9MOg" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1HnkvDW4aIBMlhfpVGIymGG1tbf5XjSub" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1uQSCj_QNn13lvOwhDuKACCXqd2mb7TIl" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1hpekTsTfI5ULsgPfRtn_UCLBfi-pEv-O" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1IZ8PMh8iyU9VMi8LyFiN3GH82-_ixNQ7" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1tyEHTwjM24aWl-BKlvSxaDOVyASMbua1" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1H7VF7BnnI2ElCV4caGZ7H6AtCdS2eL8D" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1s6SvBRIvdDmqbgoxQ9LSxWT9tKqqi1ch" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1Uj201dHW9DYZYSepYN0RBIxNpbKUbZWi" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1asSAjdyIgR9dWktQqiU5zjrcVMgDniWV" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1X6na4P0aDx6kHz16XKhoabmCWoVIvGr2" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/12skgnDFC7VcBXuTnkICsi1J0liTggJr1" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/17tTDWpBdPJAMwKNbzKTk7Oi1yTN1GWFD" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ </div>
+ </div>
+ </div>
+ </div>
+
+ <div id="vol-6" class="modal">
+ <div class="max-w-4xl mx-auto py-24 px-8 relative">
+ <button onclick="closeModal('vol-6')" class="fixed top-10 right-10 text-white text-5xl hover:text-yellow-500 z-10">&times;</button>
+ <p class="text-[10px] tracking-[0.4em] gold-text uppercase font-didot mb-2">Volunteer</p>
+ <h3 class="font-didot text-4xl text-white mb-3 italic">李彥樺</h3>
+ <div class="h-px w-full bg-white/10 mb-6"></div>
+ <p class="text-gray-400 leading-relaxed mb-10 text-sm">在最遠的地方，我找到了最靠近自己內心的答案。這是一場關於成長的旅行。</p>
+ <div class="flex flex-col items-center gap-8">
+ <img src="https://lh3.googleusercontent.com/d/1XDHE05mpc-WoLBONkPJWf62gTT3dkKRY" alt="李彥樺" class="w-64 object-cover">
+ <a href="https://oia.nchu.edu.tw/images/File/05_Global_Mobility/5-5-International-Volunteers/2025/10_____Optimized.pdf" target="_blank" class="border gold-border px-10 py-4 text-xs tracking-widest hover:bg-white/10 transition-all uppercase font-didot gold-text">閱讀完整心得報告 ↗</a>
+ </div>
+ </div>
+ </div>
+
+ <div id="vol-7" class="modal">
+ <div class="max-w-4xl mx-auto py-24 px-8 relative">
+ <button onclick="closeModal('vol-7')" class="fixed top-10 right-10 text-white text-5xl hover:text-yellow-500 z-10">&times;</button>
+ <p class="text-[10px] tracking-[0.4em] gold-text uppercase font-didot mb-2">Volunteer</p>
+ <h3 class="font-didot text-4xl text-white mb-3 italic">李晴奕</h3>
+ <div class="h-px w-full bg-white/10 mb-6"></div>
+ <p class="text-gray-400 leading-relaxed mb-10 text-sm">那些在狗園蹲下來的瞬間、在田裡流汗的午後，都成為了我生命中珍貴的刻度。</p>
+ <div class="columns-2 md:columns-3 gap-4 space-y-4">
+ <img src="https://lh3.googleusercontent.com/d/179LSLxZbqdR9DXoMb3rQ2bpVSX3KrkY7" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1VMbNmP4Cx57phWyavPBR07obXEvS1ffd" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1BZk7_An73fGCvAZb31wnbKlvmCVU1Nxl" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1XHqHL-D3LidglVUCV-xeiDECSVpIdpZO" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1ptlD-HV9nUkEpUK8R4TJh4VJ-KvB0bqW" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1Dq4kJpcI2XgjuBbwbGCPpbKb4Z5UufJW" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1mIolhzeOB5AdaKN3QadiB6Z9WalW41KD" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1SxeapupRgOIwpA09acUPWl-AMAqmnPze" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1usgD44jRy7Xi8f-YBGBVVb-s6yZQhdXW" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/12G99NQ6CBXOI7sj8pQRDHiaLEU8dJHPV" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1Cy9B44itVDcR8-JUvOE60rfJbreehHKY" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1RCVWu5fUoKrI3lyJbMTlUY64qocHJhr9" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1uRpG5_VzDKO5A8fr22m6W0uE7iaKZaMx" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1nsWNPyJNpfq1GY6QP0Nh3_RCCmAZ9lN3" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1wYvff74C5S_Ttz8ZizzbK4ZdEOO4OnPm" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1dQC0nUHibHf_PCFwuu5PFqeL7IkrKMD-" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1p_1nkiUwAD9l2lupOaoxOIQNXdKv6pn3" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1kRz-mWg_ZyO2g2RgdCtmWg9KMhsTPqFF" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1D88uhQXd621cuvtzSsggUVrnZb7TXhwZ" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1Vby0ozMrVAJnVAD6uWLjiccFNG0G9NJw" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1kkqh_A-LPJbj0K6UQIGdo8zxlc-CsB0_" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1-W2fq61PZBb-8fAE9BppsBS3HLxXYAsI" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1M5A1PTNcpCbpQ0V7tenlGK7cRTwsekI9" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1Dws2aIF7lwQofJwElB8z0FSTDUFlLUqc" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1zvypn9mELwZRdsA-BEdtwi5JmZJLzyBF" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/11Oq6z6nTV1pWM1txgH_SqxyiaismJLnM" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1TAqOqoIZ4AadHFcqe37WmqYgYquOOm5n" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1v2mARajSfn8NAH7DukjPykBJQ88DOK4I" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1wRxpDNlpb3mO5trQaRZb3j8Jfay2UJ3g" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1AOUJ9qiyUDmSY_vgkaawg0fGLCaXVRIQ" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1GYrGJkw-KTfFsYA6EqkFTF0KtuCtAmO1" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1G1xrhYH9IEIfNGsTXiJDcnoRj3tuQ40L" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1OXvJRfewpjHH_iy-RfyoSQzQBZT8R3Aa" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/18pOcGIujs0RsI-pq8aB8XJUtapINpI0D" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1ZtS6JTu8Ar3EiC_gjPHdLKAlxjq2hFbI" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1chhbjcf5XMFI-iitTNYkgAVjfoCj9z5x" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/11KeDVvXsMkAiEyBs1uXRxw759Ydr55kV" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1MVD5sxDK89N2Qoy5ht0FJtwcS8b4Treg" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1L4tPYCnbQ3_e8UD24E4wMth6GDHore7s" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1IF61NM0SkIhoFO77J2TJa0f2hdInDB3t" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1rsQ2bMmZ1SjSATdvU7LeWgrrR4quanSK" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1scOJ91DvPtNoSgPaAvSJkW_botI73JPO" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1kWMRduyZJnQpWT9ZU3OKXGqddVdLa95T" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/16euS7BayvrZkq_fmDGd_GC1R6uu_O3sA" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1nnezcC8SwhinQIPbXTbfrjuqwrRBJdP9" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ </div>
+ </div>
+ </div>
+ </div>
+
+ <div id="vol-8" class="modal">
+ <div class="max-w-4xl mx-auto py-24 px-8 relative">
+ <button onclick="closeModal('vol-8')" class="fixed top-10 right-10 text-white text-5xl hover:text-yellow-500 z-10">&times;</button>
+ <p class="text-[10px] tracking-[0.4em] gold-text uppercase font-didot mb-2">Volunteer</p>
+ <h3 class="font-didot text-4xl text-white mb-3 italic">林家安</h3>
+ <div class="h-px w-full bg-white/10 mb-6"></div>
+ <p class="text-gray-400 leading-relaxed mb-10 text-sm">服務的過程中，我不斷問自己「我能做什麼？」最終發現，陪伴本身就已足夠。</p>
+ <div class="columns-2 md:columns-3 gap-4 space-y-4">
+ <img src="https://lh3.googleusercontent.com/d/1cMpiXj6n-xuZ4j0HJYS1-KWFj_g6GL4y" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/13Ue0yB6bv2LfhIUmPpNpwOajpRtqkDoV" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1x2CYs_3F6hd0hq7G_ZvdicpBelNVLPaK" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1oiwcdDRWqlrPUExAQbLBb9wAQUHGkIr7" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1QmVyBGTpMKOxPwjJNBHEvtz1GggxSgFP" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/18PLFPY-oWvVB6lDmWwHTj74SrUhXQ7nk" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1aRen844DtvJrCZkQYTfU8oGyTYlpuqhB" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1DRua1L7_v4XEgkKQ7RzdTSS75GRibnyH" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1CdpPOLEWwUPfj8UMU1QYY4HnWwcM_Jk9" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1h7DaflNljYGX-7UgS-0U5Iq-YvXEYA-V" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1STTaFpn7lZw0jpm6OnQ5th3PgX2iBagb" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1fTsPMEm-zJ7O9BHTsQAgh0ydGFwrKAJb" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/15qjmuxK3Ed1NzRBrORdL2CHVjzEzYTiC" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1DTQLejRsFxbnN6hzR0BcsSBASVJNvb17" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ </div>
+ </div>
+ </div>
+ </div>
+
+ <div id="vol-9" class="modal">
+ <div class="max-w-4xl mx-auto py-24 px-8 relative">
+ <button onclick="closeModal('vol-9')" class="fixed top-10 right-10 text-white text-5xl hover:text-yellow-500 z-10">&times;</button>
+ <p class="text-[10px] tracking-[0.4em] gold-text uppercase font-didot mb-2">Volunteer</p>
+ <h3 class="font-didot text-4xl text-white mb-3 italic">葉熙賢</h3>
+ <div class="h-px w-full bg-white/10 mb-6"></div>
+ <p class="text-gray-400 leading-relaxed mb-10 text-sm">跨越邊界的不只是飛機，還有我對「他者」的理解與同理。這是我最珍貴的一課。</p>
+ <div class="columns-2 md:columns-3 gap-4 space-y-4">
+ <img src="https://lh3.googleusercontent.com/d/1hkvOAtTexOzIGeAuUAIKrBa3GFuwmEh2" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/16_LtVghnJAMcSvShCADIeXpWHykx1pxy" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1g9lLAZvcGyLShbNkTvNt8uNx4T-nbOp9" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1w6VEX8mdUPXAYl9ul0gVyDYaP5vtlMoo" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1eNsNzi1aLcxJRdjKPyKUkBOu2yfEtYUb" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1MUt7n_DLav_Ve23F2Y_osn9tgRXB0vFt" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1qevsYKkWGBd0SuHzDYk9iT4016PUcwPh" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1gJbH-ob4Obe5ii_wQgyPi5fMQsJs-ALJ" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1Bu7ETe_vF0HTEsB_yT5hWLUgZXCenVe3" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1OJ2x-_lxnLIA4nEnFp_wJRQLReGV66ym" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1UzJPceuE9Rn2Jg0erfbs4JZ8If2avwTz" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1VVp6004fn0eOuGHVE7iItm4Lm-lNNLjT" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/11T_rglJShYiZhEaU6PkhWgpzBKh-SCWH" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1AcUgTcqz5ZArgX58cmmATvac9WHOnGOf" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1J5lRjiMPwKfCk7gdSfxxc31eJ7qUUW4q" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/16aSI-8eMIZFw2RYKUmcuY-TihJN5kMTm" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1hQxf-6tO9tmhXACoopevRjhBcY3E6_yt" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1adtWPaqDWqFBGK7bATgAsUdDPfk26-40" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1xft5KN6DkEfItA5UCDduiAc1_ECdeAm1" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1CjtcpGWj0YfIzvT6_1Gxx31eV5W5KXur" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1at71BX8UdVpvQlhCICdcSePGauEdP-sN" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1zU1hJ6DZtmRUbh6sKOY8CkwPTDlqjL40" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1Jryg6YWDthqvS_yZvyRwqt8LXlMSmH_B" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1kD-bHY9-HhTtefy8u3EA8XVoAOhjqBA4" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1j_Ui2tB5eyvX9Yxf2ebz48Yage5BC5V3" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1IaJm4Adq70PDLR0k7ZSMH3id5ZLNmbN0" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1YSft3YPZdOkZcW7iK6gQLAjeClQ0qHUP" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1hVpF2WWdUukVol48J1jC0QxaCtnpMq5w" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1buPpaM0XsfEG5RGqFIEp7kRmkRt-Mrza" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1t-sZAEhrYv1BWsuUO7z4R2qwdVNGr0jx" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1kgsEaN-Zec7p27hdeaohd9SO5vAQztq2" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1HCjcpqvdoI-_kyRBXopgf8ePmdvrEk_i" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/154ScfgHv81Z6sRIdvnLm5lXYl1ckSUO5" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1jwTZbK2KeDA6_eUrWwrS6iqCSstPq8DD" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1czgLgPSsJBv3Gve9Hw4c837XUoF_ZmDz" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1945Yswo0h7S2r8FNszUKXxO46ZTDRW7h" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1P8e2r8EaRdnrNFv38P-17r7AkEFehJls" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1ojRLkQFdi8pCX1O8fTfuJhsnjLTt9IbI" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1LP5Gp0tJWRFIsx-nawyXUC8us99R5FDB" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1Hr3wC-Cb4jLUYyB6PdfisLlXgnxmmSiv" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1RmeOV5zEDG1r7okh8-e0uIJJJo-xBkeV" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1YbDc4LpsfakwusLct1gHpNHMsKr-Ve9-" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1fnA_juX4bYJYf99T3aLglFss9XaSZWuQ" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1bqna8UbuD5qyCpW0V8d8pqj_31iyO4Eo" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1Po-NyneH5EgVO0ANpAghHQgRcuKlYOmk" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ </div>
+ </div>
+ </div>
+ </div>
+
+ <div id="vol-10" class="modal">
+ <div class="max-w-4xl mx-auto py-24 px-8 relative">
+ <button onclick="closeModal('vol-10')" class="fixed top-10 right-10 text-white text-5xl hover:text-yellow-500 z-10">&times;</button>
+ <p class="text-[10px] tracking-[0.4em] gold-text uppercase font-didot mb-2">Volunteer</p>
+ <h3 class="font-didot text-4xl text-white mb-3 italic">林筠臻</h3>
+ <div class="h-px w-full bg-white/10 mb-6"></div>
+ <p class="text-gray-400 leading-relaxed mb-10 text-sm">從雲林到拉傑比拉傑，每一段路都讓我更確信：善意是人類共通的語言。</p>
+ <div class="flex justify-center">
+ <img src="https://lh3.googleusercontent.com/d/1oj34SpZpy5maC4vN6QzUqMeTIQCoPrPw" alt="林筠臻" class="w-72 object-cover">
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+
+ <div id="vol-11" class="modal">
+ <div class="max-w-4xl mx-auto py-24 px-8 relative">
+ <button onclick="closeModal('vol-11')" class="fixed top-10 right-10 text-white text-5xl hover:text-yellow-500 z-10">&times;</button>
+ <p class="text-[10px] tracking-[0.4em] gold-text uppercase font-didot mb-2">Volunteer</p>
+ <h3 class="font-didot text-4xl text-white mb-3 italic">蔡昀珈</h3>
+ <div class="h-px w-full bg-white/10 mb-6"></div>
+ <p class="text-gray-400 leading-relaxed mb-10 text-sm">我以為我是去幫助別人，卻發現是那些孩子的眼神治癒了我。謝謝這趟旅程。</p>
+ <div class="columns-2 md:columns-3 gap-4 space-y-4">
+ <img src="https://lh3.googleusercontent.com/d/1q5GjEuCOmcXvUtffoGSeSjYdM0UN-dnC" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/16W6DKi0qDY0x4zVDwK20VpfzBth3Cckd" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/16ZpZD6LItwal1so8_s9ajJiiUCHSMxKA" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1JhHJvTOpZCHZFxRjHlQx8ZRLI78wK-9x" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1WU7wqmIdCfq1vkzIXzTTAgDgvzv0uiBh" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1kILf1A8QBptNxEhgW21hUGdkfC8c9EkN" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1FwJHRdquSfhmjAQDVDSLk3L8USwJsvCF" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1j880A1z3BmqfGf_KFEX0P6pC6Krz4dM9" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1ReOuAZaSirXRw6FN45Lj33VYYhd2IsJh" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1C1KbYZE4Bw1zGRJ_LLQb0UQlQ3gleWa-" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1ASCq3Jmr-XsN6OzQW0neLx5n9Nd9izPk" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1EPNdml8mM_jo0iQsvZyAyG6Zpv6Pv7lD" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1RBw5mqUF4A4a5nhiOBnAGEOqIef5zAWk" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1lW7o65vQtLPnmKCRcb2OTeEm3t0y6f_S" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/11FD9nMZM5MO8LMkFdPxfREfU7L8eAjiH" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1wvYZ_6mAUogBPNOlbw_O-FQ8w2Zhuj2s" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1GLxaG1_wUbvcD_JtlmlJTg4SKyChyD4J" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/18nUroCOE3lmCb89IuEfWYOWR6TRC6JQ9" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1qtrjyqCUgbgQVgKkThA3QYtwKSVRGFOH" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1lDx5I8rHnRZNo-Q82v4THDIUG8X5VhKr" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                 <img src="https://lh3.googleusercontent.com/d/1KmR6gSIERN_6UbHb_PBFwJBlGyp2yok4" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1w_FpHKz3LcIlbfRy9TKmxqjocvKgSu0H" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1WLlKsmn71zVoN8AXi99LfX0ZODvmc9yQ" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1UAA4lX73fN-NOQRJw0en7wGHtPq27FCv" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1uLwILgMOXYcs-7aXyIKEqwv0YKYUhY6S" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+            </div>
+ </div>
+ </div>
+ </div>
+
+ <div id="vol-12" class="modal">
+ <div class="max-w-4xl mx-auto py-24 px-8 relative">
+ <button onclick="closeModal('vol-12')" class="fixed top-10 right-10 text-white text-5xl hover:text-yellow-500 z-10">&times;</button>
+ <p class="text-[10px] tracking-[0.4em] gold-text uppercase font-didot mb-2">Volunteer</p>
+ <h3 class="font-didot text-4xl text-white mb-3 italic">江采融</h3>
+ <div class="h-px w-full bg-white/10 mb-6"></div>
+ <p class="text-gray-400 leading-relaxed mb-10 text-sm">星空下的許諾不只是一個夢，它是驅動我繼續前行、繼續相信的力量來源。</p>
+ <div class="columns-2 md:columns-3 gap-4 space-y-4">
+ <img src="https://lh3.googleusercontent.com/d/1cn8rT4tCBgdE84yksIb_kZD6ChRSfeIF" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1JhGiXAYEdNAStou2JR3M5Sg-b8hsm4y9" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1i8cp1XD7KW3Hs_6IInwhZGAP7F43JxCC" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1Ssgj0m6Tub1CxHEu5n8jlW-xN5FgS9xN" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/15mcu7qJJaCgdOpZaSk6FDVfOrb41hHs1" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1bqRl55UxvHksqr0tvrAwyiwLdyHyAga5" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/18IOaJdUog886RS_nouSCxkMdtsMTciWj" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1FirJCKOnb7gMQMAHIkW4e17NAhMVWEPC" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1ZRD-6dXF2nzz5aUcS7xwj-nzgOE2CPFX" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1E8B0B3K7yxY3VO4Q_Ph_1q2lWhYNepUJ" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1TJAIenMBvHgw9MVdOy8XOf4hWuDn2GGN" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1m_hgLUuXDXJJ4BeGV6oS4ylQ-JOMD1cr" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/10QlNtOOl2tEvnj6aaPmtcQFRTOQfk3-m" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1mGvnMaFopE0a9dXzJhSzWnqvmvPndew8" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1ngZlp9L0PgL6SVtILPZMky4gEGvNddad" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1bGZ1V9Ve6zl5Uq3DZA_mX8lfbBz7IksZ" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1JdzyX3lGMAdWNeO-rTgsOXBt1mG6BUwp" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1w77TOexfzs3HUJJZDP5iCbeQ6HWpZ22r" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1XsAnlsWmsDiNXRBoA8z6HrBzB46I6StN" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1ONSL8cCvM-2pMqep_2hByWHjTF4mFSa6" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1ZreXWBiFsm1XN2HXLOnmIs7y-8PNjvDv" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1hG1Tl1brC2voLFMf3qFtFO-MMiDGKPy-" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1dcswnOcS380XMgp5IIK4fCEU1DuvTz4A" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1EWonUFSPOt8MWCbh2cc6TyipOyvPZoV0" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1ATNYPE46HOr8U4IvuH1wou6NaTfB5vRy" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ <img src="https://lh3.googleusercontent.com/d/1ujFMBMReSAqUaMaR2gkdes7_Fh6cKyPP" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+ </div>
+ </div>
+ </div>
+ </div>
+
+
+ <div id="nepal-1" class="modal">
+ <div class="max-w-5xl mx-auto py-24 px-8 relative">
+ <button onclick="closeModal('nepal-1')" class="fixed top-10 right-10 text-white text-5xl hover:gold-text z-10">&times;</button>
+ <h3 class="font-didot text-4xl gold-text mb-3 italic">拉傑比拉傑：校園與微笑</h3>
+ <div class="h-[1px] w-full bg-white/10 mb-4"></div>
+ <p class="text-gray-400 leading-relaxed mb-10">在這純樸的小鎮中，我們搭起一座與當地孩子們的橋樑。</p>
+ <!-- 圖片網格：整理好後替換 YOUR_FILE_ID_X -->
+ <div class="columns-2 md:columns-3 gap-4 space-y-4">
+                <img src="https://lh3.googleusercontent.com/d/1NFrj7E8cyfMhMnHA8ApmbjRI4Ae0kSmf" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1qIOG_FOOyIw57QlpdIde2AcfIgCM2uHq" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1IolF27jpW5LPwh6ZKTwWzxjbvQDu6zBF" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1j3IYm7lmnPM4ZrjMJSOUMCl4aVC3Qpty" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1HIihxvlnH9AV3hSu6UNH40S9K8ZnXuo8" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1IxJvg0yNVHEUOEvY86H9whc0r341QSsa" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1sErjiLrJ0kE-eRsabJQHvv1sKBRY4c4y" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1vmhIlFPUXCGjJbyLDG-L1KtOzBC8eaNd" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1RKd8FO8EvnfW7N8qDjQbId6rfU1tsUiK" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1mshGLXaYdRwCwM7eLrwyUwwqopHDhj8U" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/137Xjs7JgP4IAjn2-uHlTgMNUB0FHJfnd" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/128_1HuM-B9n9WPycP3oZqrSN6-kHeVVv" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1nuY8AziMAX-YYZthYlAZDS2h4U2CgYz_" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1zgPiE_Uf1LQbWkW1sRAtChMPCyluIIAi" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1Co5xIRyG-GzQFlUlbtsmlgm3ApkjMWEC" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1mf4wCuqW9I4hmN8tF78RV2fDvj_2nOkt" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1XrNNleDowbI0zaeMRTrtsrPjbrpMV-FB" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1xTF572gfO2A7U6wg2uAZI4konHHsfdGU" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1MvX_Z_kamqlei6JYSts-Gp93SEZ8ZOWO" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1JVSpWSpBs92HNcOnWxbKPZbvfeE-5F2p" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1TPtLi5yPBNIVdzHXiNHNUQY2XJVHGhOH" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1NYY6xRiKveO-sEO1GjU9UCCz_-dc5tH9" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+            </div>
+ </div>
+ </div>
+ </div>
+
+ <div id="nepal-2" class="modal">
+ <div class="max-w-5xl mx-auto py-24 px-8 relative">
+ <button onclick="closeModal('nepal-2')" class="fixed top-10 right-10 text-white text-5xl hover:gold-text z-10">&times;</button>
+ <h3 class="font-didot text-4xl gold-text mb-3 italic">我們都是一家人：甜蜜蜜的熱茶</h3>
+ <div class="h-[1px] w-full bg-white/10 mb-4"></div>
+ <p class="text-gray-400 leading-relaxed mb-10">家，是一個概念，並非一個地點。有歸屬的地方，那就是家。</p>
+ <!-- 圖片網格：整理好後替換 YOUR_FILE_ID_X -->
+ <div class="columns-2 md:columns-3 gap-4 space-y-4">
+                <img src="https://lh3.googleusercontent.com/d/1q5x0qzEbtQxlEgBsx7HLPGKIVN0dKK-G" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1sJRV2izYoz8LEgUd6jB4qfO3Qck6TBXY" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1zDlvlYdT9PcfgQ0P-gTsE_cjK9-s9_HP" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/186DKr4Z4aC2JY-mDSSseQgFr_hAPe4Ka" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1D_HVxVoYcNO77uz0kEM9fvSp4H7cPM3F" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1DtmnnCzNkeL8BHjKV3pFmSDVfUSccs4N" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1vf6jqQTCDV26MsCGhE0RA_h9ez_mdIbO" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/10Cw9Lzujf-DcZ3cw0Ghb_3T-ATevYVfy" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1Pj0hWdK7km0WApeb-GVeZA1YYgB2xNu7" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/12XvhHgb4tZYSABIM0zOzwIsvxIpLvvXT" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1FAuhEAGyKi3sm44kFNDJDmcmp9VYaDZi" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1Da6gR_AlW0801jvdRLp0LKa8zPvt2uoW" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1eHjYJai1ljMGlhC0BYRP_mt5f3kY_CFs" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1fW--i68FoT3JQaNK9H6Kgn1s4I_hldQR" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1AuwIBSylfvHJCqsNlsde-uQ6zKLlkiEG" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/10i0nlDk-yJKMux5DA4mTXup03PLOzexJ" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1E_JRfjrrv3pql47f6Ju532y85rQunECC" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1GyZMFdwFHb6uNM_jzn4digtU1yLUvU2B" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1vhlnIBzfNQdDHa_CsJ9v5RTKYREDBSef" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1v7UzTIxKhfMgYh0kzdxKMz6ZxukKyM3U" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1940YK9JPnIBMO7nR3qcG01C6wrqDe5EV" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/14gej8zpFglYNXBwMFWDKWv1O9AmRuIyU" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/10SMZYSRI_iF7uUM1E4d1KoGV2IWPxQfz" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/18ZTNziymcbNpE4TaZlx-IU8BP-Ct5iFH" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1VpqnQ02Nwi8s1AjcaW2LJvKxyoriv2NW" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/11jRjU01gQ0LM2UKUq3vy3BKAA9Z6BBNd" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1QtKSh2BEOg6vbVr4jm9AwjmT0u7uc17W" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1-kXQyGkAD1zW6jQQo6dkIa1AO17o88uQ" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1yog8taZg12YXx4BFJTrkl6dPQbfQED5a" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1WFzuB23nuDMk-a54d2x-r4urZg1cJdpo" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+            </div>
+ </div>
+ </div>
+ </div>
+
+ <div id="nepal-3" class="modal">
+ <div class="max-w-5xl mx-auto py-24 px-8 relative">
+ <button onclick="closeModal('nepal-3')" class="fixed top-10 right-10 text-white text-5xl hover:gold-text z-10">&times;</button>
+ <h3 class="font-didot text-4xl gold-text mb-3 italic">文化連結：尼泊爾的土地</h3>
+ <div class="h-[1px] w-full bg-white/10 mb-4"></div>
+ <p class="text-gray-400 leading-relaxed mb-10">透過鏡頭，我們記錄下這片美麗的土地</p>
+ <!-- 圖片網格：整理好後替換 YOUR_FILE_ID_X -->
+ <div class="columns-2 md:columns-3 gap-4 space-y-4">
+                <img src="https://lh3.googleusercontent.com/d/1lei60eOsdoN0NYXm5jIBTPBVtG26XNXO" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1ILNmCOSY3Wslfy0uvWDehggVjjKnT3RJ" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1aFlKMPb4isJW0Ae0lU7sNCKrIvtADL87" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/17iRNjvZodIduLH1Bxe-KhYZxNEStoIDm" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1S0uw-D8J4cDtfKTisKhbHsnkiIS4EXC-" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1a48iStvkO0hXqrquSnOeyIwHMb7NqJmW" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1X1OhEXngA5uQ0KZYF5ZvrtUtFF5jzXD4" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1zJp_i3h7D79q29tMjntl1kNGILLgmEtb" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1g6z8m083Z9H7mKFt8B0BRiE6SUEEdRJ1" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1esTIFLHXF95f7HI1ZAvjaAcUkqLWvH-2" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/14tIu-zgv03Gzc1FHS97o5oXNnaQvcNsO" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/10clpxe97WLEHT8bj0FlHwILSs-_cgHnb" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1hWc8Npv9aEaJb6NYTrPjoKQUtvpIHhT5" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1h1sibyWaA5Eu2THDA26wXF6BLbMW-SmN" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/18RQqkvrShPbbROf08V-IhEI25vXRXA_O" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1EzhJk-0a1k-fTZl74hOsKlKcPKANX4qd" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/18ouSFM2Ej53P3HSNZRFVzwmURXLyIqMD" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1ytDPpj38Ps6_1VuQaYk1Rzhjl7ylrSZN" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1UMJ1fdlFoJ85Fv7mCTRkKQOYD7mZM-da" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1rg5_jJk_LGXFk6gJqvmGyTEf8vNpjK55" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1UhO-TsHUliAD5GygftN7JWVDP6E0tQBT" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1QUWyMACWGIUbAr5-rLKzC6RpTzMW-Oll" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1tKqVVnvIss3Q1Ihb-epeOpX63sblHiC5" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1pOrNilZuC8pLVBnJyLZObGOBSrD-TWsE" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+                <img src="https://lh3.googleusercontent.com/d/1O-9qBN8BN1pbTfw8XlCU02IclfXKu9lf" alt="photo" class="w-full hover:opacity-80 transition-opacity">
+            </div>
+ </div>
+ </div>
+ </div>
+
+ <!-- 國內服務燈箱 -->
+ <div id="dom-1" class="modal">
+ <div class="max-w-5xl mx-auto py-24 px-8 relative">
+ <button onclick="closeModal('dom-1')" class="fixed top-10 right-10 text-white text-5xl hover:gold-text z-10">&times;</button>
+ <h3 class="font-didot text-4xl gold-text mb-3 italic">雲林育幼院：溫慢陪伴</h3>
+ <div class="h-[1px] w-full bg-white/10 mb-4"></div>
+ <p class="text-gray-400 leading-relaxed mb-10">透過一日的陪伴，我們希望成為孩子們成長路上的微光。</p>
+ <div class="columns-2 md:columns-3 gap-4 space-y-4">
+ <img src="https://lh3.googleusercontent.com/d/1SdfHpsGEbK5J5Dcf8KNHt1Cr5LW_QAKN" alt="育幼院 1" class="w-full hover:opacity-80 transition-opacity cursor-zoom-in">
+ <img src="https://lh3.googleusercontent.com/d/1YzDG1phf6O1HKEyn3A102JI3O9HhG9Zo" alt="育幼院 2" class="w-full hover:opacity-80 transition-opacity cursor-zoom-in">
+ <img src="https://lh3.googleusercontent.com/d/18MRtpXs-ppaxkTphkZd1QIACII_GNIjh" alt="育幼院 3" class="w-full hover:opacity-80 transition-opacity cursor-zoom-in">
+ <img src="https://lh3.googleusercontent.com/d/1s30YY5npiHLbVyHRKVcrVCtlU2APR0Ty" alt="育幼院 4" class="w-full hover:opacity-80 transition-opacity cursor-zoom-in">
+ <img src="https://lh3.googleusercontent.com/d/1bJOxjMzpoGnUkNh2k8hEhZAXO-Bo27W1" alt="育幼院 5" class="w-full hover:opacity-80 transition-opacity cursor-zoom-in">
+ <img src="https://lh3.googleusercontent.com/d/1q-BZfh8zEtbQO11NKAZ0kSOXtRar-7xa" alt="育幼院 6" class="w-full hover:opacity-80 transition-opacity cursor-zoom-in">
+ <img src="https://lh3.googleusercontent.com/d/1eSatSa4Bom4-355ZLXo_ejmE6_muzdmy" alt="育幼院 7" class="w-full hover:opacity-80 transition-opacity cursor-zoom-in">
+ <img src="https://lh3.googleusercontent.com/d/13DoiVVqxMuekEfD9TTU1rjEievZwBXzr" alt="育幼院 8" class="w-full hover:opacity-80 transition-opacity cursor-zoom-in">
+ <img src="https://lh3.googleusercontent.com/d/1qzqJ6_HnBMk9QNvfvChpDfLbKHjstc_I" alt="育幼院 9" class="w-full hover:opacity-80 transition-opacity cursor-zoom-in">
+ <img src="https://lh3.googleusercontent.com/d/1nZfYH7UefGZNqIeT1qGHd-li2rDShbtS" alt="育幼院 10" class="w-full hover:opacity-80 transition-opacity cursor-zoom-in">
+ </div>
+ </div>
+ </div>
+
+ <div id="dom-2" class="modal">
+ <div class="max-w-5xl mx-auto py-24 px-8 relative">
+ <button onclick="closeModal('dom-2')" class="fixed top-10 right-10 text-white text-5xl hover:gold-text z-10">&times;</button>
+ <h3 class="font-didot text-4xl gold-text mb-3 italic">狗園服務：生命的重量</h3>
+ <div class="h-[1px] w-full bg-white/10 mb-4"></div>
+ <p class="text-gray-400 leading-relaxed mb-10">學習與生命對話，實踐對每一個生命的尊重。</p>
+ <div class="columns-2 md:columns-3 gap-4 space-y-4">
+ <img src="https://lh3.googleusercontent.com/d/1Mhh1PWWrgjxeFyLOOvat4b0EtS4cnuy6" alt="狗園 1" class="w-full hover:opacity-80 transition-opacity cursor-zoom-in">
+ <img src="https://lh3.googleusercontent.com/d/1nchGGDvJFnknxGHZsfqPLi_0v5saDQEB" alt="狗園 2" class="w-full hover:opacity-80 transition-opacity cursor-zoom-in">
+ <img src="https://lh3.googleusercontent.com/d/1le7V3MeVTD41ZKRzN3hlSdnjzvZ3r0B3" alt="狗園 3" class="w-full hover:opacity-80 transition-opacity cursor-zoom-in">
+ <img src="https://lh3.googleusercontent.com/d/1p6RYMOSXBtlzbf18JBQzFS0s70zbKi7U" alt="狗園 4" class="w-full hover:opacity-80 transition-opacity cursor-zoom-in">
+ <img src="https://lh3.googleusercontent.com/d/1hnCAP4pLSyduPvNVkIQZsPpULcodBhZJ" alt="狗園 5" class="w-full hover:opacity-80 transition-opacity cursor-zoom-in">
+ <img src="https://lh3.googleusercontent.com/d/1IZbOyXvUxnVnriOzmxxzAScsg9UGd5uX" alt="狗園 6" class="w-full hover:opacity-80 transition-opacity cursor-zoom-in">
+ <img src="https://lh3.googleusercontent.com/d/1nAd2_VXvRCbm5jgGIjMgSthe8fkhL-2Y" alt="狗園 7" class="w-full hover:opacity-80 transition-opacity cursor-zoom-in">
+ <img src="https://lh3.googleusercontent.com/d/1hBQEZUnhcX7NBS63dwdj8ilzDd8EKy5_" alt="狗園 8" class="w-full hover:opacity-80 transition-opacity cursor-zoom-in">
+ <img src="https://lh3.googleusercontent.com/d/1EKOzo1-IUTDN8vHuq5wfFwdV4oRiqdb5" alt="狗園 9" class="w-full hover:opacity-80 transition-opacity cursor-zoom-in">
+ </div>
+ </div>
+ </div>
+
+ <div id="dom-3" class="modal">
+ <div class="max-w-5xl mx-auto py-24 px-8 relative">
+ <button onclick="closeModal('dom-3')" class="fixed top-10 right-10 text-white text-5xl hover:gold-text z-10">&times;</button>
+ <h3 class="font-didot text-4xl gold-text mb-3 italic">苗栗農田：友善土地</h3>
+ <div class="h-[1px] w-full bg-white/10 mb-4"></div>
+ <p class="text-gray-400 leading-relaxed mb-10">走入農田，重新建立人與自然環境的橋樑。</p>
+ <div class="columns-2 md:columns-3 gap-4 space-y-4">
+ <img src="https://lh3.googleusercontent.com/d/1_r2Csnr8ECpH8LD6MhCaQJFKcN5qKJpf" alt="農田 1" class="w-full hover:opacity-80 transition-opacity cursor-zoom-in">
+ <img src="https://lh3.googleusercontent.com/d/1SQGuRA_CNs6OPA-BEDTMh5hlIKLadGNU" alt="農田 2" class="w-full hover:opacity-80 transition-opacity cursor-zoom-in">
+ <img src="https://lh3.googleusercontent.com/d/19lqsVbtaoqz2Y0bu_IFFivtlm4sGZMy4" alt="農田 3" class="w-full hover:opacity-80 transition-opacity cursor-zoom-in">
+ <img src="https://lh3.googleusercontent.com/d/1LvGu8TKsep6pgUFYJd56FISjoibo_ZPJ" alt="農田 4" class="w-full hover:opacity-80 transition-opacity cursor-zoom-in">
+ <img src="https://lh3.googleusercontent.com/d/1OPVAG-hfIqfpw5GeLvq9QyVAE-FalB4t" alt="農田 5" class="w-full hover:opacity-80 transition-opacity cursor-zoom-in">
+ <img src="https://lh3.googleusercontent.com/d/1-BT-Pokccg3euvPHnToi1C84MdOA5Eyj" alt="農田 6" class="w-full hover:opacity-80 transition-opacity cursor-zoom-in">
+ <img src="https://lh3.googleusercontent.com/d/1RTCAX1vds-fTT1QgdV3Du2rK0uDWV6kI" alt="農田 7" class="w-full hover:opacity-80 transition-opacity cursor-zoom-in">
+ <img src="https://lh3.googleusercontent.com/d/1wwpBnsWFa8Gl0L4tGC6LyN-OVa9NzJh_" alt="農田 8" class="w-full hover:opacity-80 transition-opacity cursor-zoom-in">
+ <img src="https://lh3.googleusercontent.com/d/1ZQH4iWk8x81zJBgpbjwsDAgNKXiznBi1" alt="農田 9" class="w-full hover:opacity-80 transition-opacity cursor-zoom-in">
+ <img src="https://lh3.googleusercontent.com/d/1H_3hUKPwJj65u-0cJhBHtoqzMhzpGMVf" alt="農田 10" class="w-full hover:opacity-80 transition-opacity cursor-zoom-in">
+ <img src="https://lh3.googleusercontent.com/d/1rq8ITYAoAbXmwR-61_7L-vOL6ol1pkzg" alt="農田 11" class="w-full hover:opacity-80 transition-opacity cursor-zoom-in">
+ <img src="https://lh3.googleusercontent.com/d/10tLG9emGfh_JxZfxWyviC593W69ZN6r0" alt="農田 12" class="w-full hover:opacity-80 transition-opacity cursor-zoom-in">
+ <img src="https://lh3.googleusercontent.com/d/1UxQUsBbmW7yK16y2wo6kHCI346aD-PDn" alt="農田 13" class="w-full hover:opacity-80 transition-opacity cursor-zoom-in">
+ <img src="https://lh3.googleusercontent.com/d/1paZkOp9YqIjKIPSCH8_7lCb3E9dBKenH" alt="農田 14" class="w-full hover:opacity-80 transition-opacity cursor-zoom-in">
+ <img src="https://lh3.googleusercontent.com/d/1PxCxjz843j5BdsMf2h81xnv9oNkpGH9H" alt="農田 15" class="w-full hover:opacity-80 transition-opacity cursor-zoom-in">
+ <img src="https://lh3.googleusercontent.com/d/10RekMIaEppdfM3Ydi9E4kWIMD6rNN46s" alt="農田 16" class="w-full hover:opacity-80 transition-opacity cursor-zoom-in">
+ <img src="https://lh3.googleusercontent.com/d/1DanZAxhn72PMQ-d4P6DgFgbmqkJzzsUl" alt="農田 17" class="w-full hover:opacity-80 transition-opacity cursor-zoom-in">
+ <img src="https://lh3.googleusercontent.com/d/1C2aAI0PPWQr3t4s1BJKCkuJ6gx3UBDCl" alt="農田 18" class="w-full hover:opacity-80 transition-opacity cursor-zoom-in">
+ <img src="https://lh3.googleusercontent.com/d/1MkTETKYXb24q2qjEKHFQiKzWs80C5W38" alt="農田 19" class="w-full hover:opacity-80 transition-opacity cursor-zoom-in">
+ <img src="https://lh3.googleusercontent.com/d/1qESFJqqKoSlbElluG6dhgB_s4B2RFGKZ" alt="農田 20" class="w-full hover:opacity-80 transition-opacity cursor-zoom-in">
+ <img src="https://lh3.googleusercontent.com/d/1yBUbw_1tBSqA3vjbavwI8MZpvBgHJwXc" alt="農田 21" class="w-full hover:opacity-80 transition-opacity cursor-zoom-in">
+ <img src="https://lh3.googleusercontent.com/d/1joAD3LZLhhHZjPPlJYWhzwWXdhx5PBuA" alt="農田 22" class="w-full hover:opacity-80 transition-opacity cursor-zoom-in">
+ </div>
+ </div>
+ </div>
+
+ <script>
+ const menuBtn = document.getElementById('menu-btn');
+ const closeBtn = document.getElementById('close-btn');
+ const mobileMenu = document.getElementById('mobile-menu');
+
+ menuBtn.addEventListener('click', () => mobileMenu.classList.remove('translate-x-full'));
+ closeBtn.addEventListener('click', () => mobileMenu.classList.add('translate-x-full'));
+
+ document.querySelectorAll('.mobile-nav-link').forEach(link => {
+ link.addEventListener('click', () => mobileMenu.classList.add('translate-x-full'));
+ });
+
+ function openModal(id) {
+ document.getElementById(id).classList.add('active');
+ document.body.style.overflow = 'hidden';
+ }
+
+ function closeModal(id) {
+ document.getElementById(id).classList.remove('active');
+ document.body.style.overflow = 'auto';
+ }
+
+ window.onclick = function(event) {
+ if (event.target.classList.contains('modal')) {
+ event.target.classList.remove('active');
+ document.body.style.overflow = 'auto';
+ }
+ }
+
+ // Google Form AJAX 送出邏輯
+ $('#google-form').submit(function (e) {
+ // 在這裡我們要先擋掉form默認事件
+ e.preventDefault();
+
+ // 需要先確認必填欄位是否填寫
+ if ($('#name').val() && $('#message').val()) {
+ 
+ // 防止重複點擊，將按鈕改為傳送中
+ var $btn = $(this).find('button[type="submit"]');
+ var originalText = $btn.text();
+ $btn.text('SENDING...').prop('disabled', true);
+
+ $.ajax({
+ // url為Google Form按下submit的action
+ url: "https://docs.google.com/forms/d/e/1FAIpQLSf-ptJ4SqrXLzpU6EpXLfCtq-Y5r4ejOj5rh-5eQwAUYatp7Q/viewform?usp=header",
+ crossDomain: true, //解決跨網域CORS的問題
+ data: {
+ // entry.xxxxx 這些需要填寫您表單裡面的值，與其相互對應
+ "entry.335976986": $('#name').val(),    // 請替換為您「姓名」的 entry ID
+ "entry.1469479569": $('#message').val()  // 請替換為您「回饋」的 entry ID
+ },
+ type: "POST", //因為是要進行insert的動作，故事用POST
+ dataType: "JSONP",
+ complete: function () {
+ //完成後把這些欄位清空
+ $('#name').val('');
+ $('#message').val('');
+
+ // 恢復按鈕狀態
+ $btn.text(originalText).prop('disabled', false);
+ 
+
+ }
+ });
+ }
+ });
+ </script>
+</body>
+</html>
