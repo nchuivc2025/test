@@ -263,7 +263,7 @@
  <iframe
  class="w-full h-full"
  src="https://www.youtube.com/embed/vAme2TKYmRw"
- title="成果影片 1"
+ title="國內志工服務"
  frameborder="0"
  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
  allowfullscreen>
@@ -271,6 +271,7 @@
  </div>
  <div class="mt-6 px-1">
  <div class="h-[1px] w-8 gold-bg mb-4 opacity-60"></div>
+ <p class="text-base text-white mb-1 tracking-wide">國內志工服務</p>
  <p class="text-xs text-gray-500 tracking-widest uppercase font-didot">Film No. 01</p>
  </div>
  </div>
@@ -280,7 +281,7 @@
  <iframe
  class="w-full h-full"
  src="https://www.youtube.com/embed/c3gtKmdePQA"
- title="成果影片 2"
+ title="尼泊爾志工服務：「興」中有「尼」"
  frameborder="0"
  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
  allowfullscreen>
@@ -288,6 +289,7 @@
  </div>
  <div class="mt-6 px-1">
  <div class="h-[1px] w-8 gold-bg mb-4 opacity-60"></div>
+ <p class="text-base text-white mb-1 tracking-wide">尼泊爾志工服務：「興」中有「尼」</p>
  <p class="text-xs text-gray-500 tracking-widest uppercase font-didot">Film No. 02</p>
  </div>
  </div>
@@ -363,7 +365,7 @@
  ${src ? `<img src="${src}" alt="${v.name}" class="w-full h-full object-cover">` : `<span class="text-[10px] text-gray-700 italic font-didot">PHOTO</span>`}
  </div>
  <p class="text-sm mb-1">${v.name}</p>
- <p class="text-[10px] gold-text opacity-60 font-didot">Volunteer</p>
+ <p class="text-[10px] gold-text opacity-60 font-didot">${["vol-1","vol-2"].includes(v.id) ? "Student Leader" : "Volunteer"}</p>
  </div>
  `);
  });
@@ -463,7 +465,7 @@
  <div id="vol-1" class="modal">
  <div class="max-w-4xl mx-auto py-24 px-8 relative">
  <button onclick="closeModal('vol-1')" class="fixed top-10 right-10 text-white text-5xl hover:text-yellow-500 z-10">&times;</button>
- <p class="text-[10px] tracking-[0.4em] gold-text uppercase font-didot mb-2">Volunteer</p>
+ <p class="text-[10px] tracking-[0.4em] gold-text uppercase font-didot mb-2">Student Leader</p>
  <h3 class="font-didot text-4xl text-white mb-3 italic">劉宜婷</h3>
  <div class="h-px w-full bg-white/10 mb-6"></div>
  <p class="text-gray-400 leading-relaxed mb-10 text-sm">在這趟旅程中，我第一次真正理解「付出」的意義。每一次彎下腰，都讓我看見更廣闊的世界。</p>
@@ -491,7 +493,7 @@
  <div id="vol-2" class="modal">
  <div class="max-w-4xl mx-auto py-24 px-8 relative">
  <button onclick="closeModal('vol-2')" class="fixed top-10 right-10 text-white text-5xl hover:text-yellow-500 z-10">&times;</button>
- <p class="text-[10px] tracking-[0.4em] gold-text uppercase font-didot mb-2">Volunteer</p>
+ <p class="text-[10px] tracking-[0.4em] gold-text uppercase font-didot mb-2">Student Leader</p>
  <h3 class="font-didot text-4xl text-white mb-3 italic">許競恬</h3>
  <div class="h-px w-full bg-white/10 mb-6"></div>
  <p class="text-gray-400 leading-relaxed mb-10 text-sm">走進尼泊爾的校園，孩子們的笑容讓我明白，語言從來都不是距離，心才是。</p>
